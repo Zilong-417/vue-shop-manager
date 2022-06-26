@@ -22,5 +22,28 @@ export const reqCategory3List = (category2Id) => request({
 //获取分类列表
 ///admin/product/attrInfoList/{category1Id}/{category2Id}/{category3Id}
 export const reqattrInfoList = (category1Id, category2Id, category3Id) => request({
-    url: `admin/product/attrInfoList/${category1Id}/${category2Id}/${category3Id}`, method: 'get'
+    url: `/admin/product/attrInfoList/${category1Id}/${category2Id}/${category3Id}`, method: 'get'
 })
+
+//增加属性与属性值接口
+///admin/product/saveAttrInfo
+export const reqAddAttr = (data) => request({
+    url: `/admin/product/saveAttrInfo`, method: 'post', data
+})
+/**
+ {
+  "attrName": "string",  属性名
+  "attrValueList": [     属性名中的属性值，因为属性值可以多个，所以需要数组
+    {
+      "attrId": 0,       属性的id
+      "id": 0,
+      "valueName": "string"  属性值
+    }
+  ],
+  "categoryId": 0,    categoryId3
+  "categoryLevel": 0,
+  "id": 0
+}
+ */
+
+
