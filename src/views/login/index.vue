@@ -112,6 +112,7 @@ export default {
               this.loading = false;
             })
             .catch(() => {
+
               this.loading = false;
             });
         } else {

@@ -54,7 +54,8 @@ export default {
             //console.log(result)
             //result.code不要忘记code
             if (result.code == 200) {
-                this.list1 = result.data;
+                var arr = result.data.slice(1, 10);
+                this.list1 = arr;
             }
         },
         //一级分类的select事件回调（当一级分类的option发生变化时，获取二级分类的数据）
