@@ -2,7 +2,7 @@
     <div>
         <el-card style="margin: 20px 0;">
             <!--子向父传数据用自定义事件-->
-            <CategorySelect @getCategoryId="getCategoryId"></CategorySelect>
+            <CategorySelect @getCategoryId="getCategoryId" :show="!isShowTable"></CategorySelect>
         </el-card>
         <el-card>
             <!---->
@@ -53,11 +53,16 @@
                     </el-table-column>
                     <el-table-column label="操作" width="300" align="center" prop="prop">
                         <template slot-scope="{row,$index}">
-                            <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+                            <!--气泡删除确定框-->
+                            <el-popconfirm :title="`确定删除${row.valueName}?`" @onConfirm="deleteValueName($index)">
+                                <el-button type="danger" icon="el-icon-delete" size="mini" slot="reference"></el-button>
+
+                            </el-popconfirm>
                         </template>
                     </el-table-column>
                 </el-table>
-                <el-button type="primary">保存</el-button>
+                <el-button type="primary" @click="addOrUpdateAttr" :disabled="attrInfo.attrValueList.length < 1">保存
+                </el-button>
                 <el-button @click="isShowTable = true">取消</el-button>
             </div>
         </el-card>
@@ -132,6 +137,9 @@ export default {
                 //给每一个属性值添加一个标记flag：用于切换；每个属性值都可以控制自己的切换
                 //当前的flag为响应式数据（数据变化，视图跟着变化）
             })
+            this.$nextTick(() => {
+                this.$refs[this.attrInfo.attrValueList.length - 1].focus()
+            })
         },
         //添加属性按钮的回调
         //获取三级分类ID
@@ -196,6 +204,36 @@ export default {
                 this.$refs[index].focus()
             })
             //row.flag = true
+        },
+        //气泡删除确认框的确定事件
+        //最新版本的ElementUI--2.15.6 要用onConfirm
+        deleteValueName(index) {
+            //当前删除属性值的操作是不需要发请求的
+            this.attrInfo.attrValueList.splice(index, 1)
+        },
+        //保存按钮：进行添加属性或者修改属性的操作
+        async addOrUpdateAttr() {
+            //整理参数：1、如果用户添加很多属性值，且属性值为空不应该提交给服务器
+            //提交给服务器数据当中不应该出现flag字段
+            this.attrInfo.attrValueList = this.attrInfo.attrValueList.filter(item => {
+                //过滤掉属性值不是空的
+                if (item.valueName != '') {
+                    //删除掉flag属性
+                    delete item.flag;
+                    return true;
+                }
+            })
+            try {
+                //发请求
+                await this.$API.attr.reqAddOrUpdateAttr(this.attrInfo);
+                //展示平台属性信号量进项切换
+                this.isShowTable = true;
+                this.$message({ type: 'success', message: '保存成功' })
+                //保存成功后需要需要再次获取平台属性进行展示
+                this.getAttrList()
+            } catch (error) {
+
+            }
         }
     }
 }
