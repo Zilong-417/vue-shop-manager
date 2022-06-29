@@ -36,7 +36,8 @@ Vue.use(ElementUI, { locale })
 
 //注册全局组件
 Vue.component(CategorySelect.name, CategorySelect)
-
+import HintButton from '@/components/HintButton'
+Vue.component(HintButton.name, HintButton)
 
 
 Vue.config.productionTip = false
