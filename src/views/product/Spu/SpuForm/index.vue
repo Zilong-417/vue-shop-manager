@@ -23,15 +23,38 @@
                 </el-dialog>
             </el-form-item>
             <el-form-item label="销售属性">
-                <el-select placeholder="还有3未选择" value="">
-                    <el-option label="label" value="1"></el-option>
+                <el-select :placeholder="`还有${unSelectSaleAttr.length}未选择`" v-model="attrId">
+                    <el-option :label="unSelect.name" :value="unSelect.id" v-for="(unSelect, index) in unSelectSaleAttr"
+                        :key="unSelect.id"></el-option>
                 </el-select>
-                <el-button type="primary" icon="el-icon-plus">添加销售属性</el-button>
-                <el-table style="width: 100%;margin-top: 10px;" border>
+                <el-button type="primary" icon="el-icon-plus" style="margin-left: 5px;" :disabled="!attrId">添加销售属性
+                </el-button>
+                <el-table style="width: 100%;margin-top: 10px;" border :data="spu.spuSaleAttrList">
                     <el-table-column label="序号" type="index" width="80px" align="center"></el-table-column>
-                    <el-table-column label="属性名" prop="prop" width="width"></el-table-column>
-                    <el-table-column label="属性值名称列表" prop="prop" width="width"></el-table-column>
-                    <el-table-column label="操作" prop="prop" width="width"></el-table-column>
+                    <el-table-column label="属性名" prop="saleAttrName" width="width"></el-table-column>
+                    <el-table-column label="属性值名称列表" prop="prop" width="width">
+                        <!--作用域插槽  row销售属性-->
+                        <template slot-scope="{row,$index}">
+                            <el-tag :key="tag.id" v-for="tag in row.spuSaleAttrValueList" closable
+                                :disable-transitions="false">
+                                {{ tag.saleAttrValueName }}
+                            </el-tag>
+
+                            <!-- @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm"-->
+                            <el-input class="input-new-tag" v-if="row.inputVisible" v-model="row.inputValue"
+                                ref="saveTagInput" size="small">
+                            </el-input>
+                            <!--@click="showInput"-->
+                            <el-button v-else class="button-new-tag" size="small">+ 添加
+                            </el-button>
+                        </template>
+                    </el-table-column>
+                    <el-table-column label="操作" prop="prop" width="200">
+                        <template slot-scope="{row,$index}">
+                            <el-button type="danger" icon="el-icon-delete">删除</el-button>
+
+                        </template>
+                    </el-table-column>
                 </el-table>
             </el-form-item>
             <el-form-item>
@@ -85,6 +108,7 @@ export default {
             trademarkList: [],//品牌信息
             spuImageList: [],//存spu图片
             saleAttrList: [],//销售属性的数据
+            attrId: '',//收集未选择的销售属性ID
         }
     },
     methods: {
@@ -127,9 +151,38 @@ export default {
             }
         }
     },
+    computed: {
+        unSelectSaleAttr() {
+            //计算出还未选择的销售属性
+            //销售属性：尺寸 颜色 版本
+            let result = this.saleAttrList.filter(item => {
+                return this.spu.spuSaleAttrList.every(item1 => {
+                    return item.name != item1.saleAttrName
+                })
+            })
+            return result;
+        }
+    }
 
 }
 </script>
 
 <style>
+.el-tag+.el-tag {
+    margin-left: 10px;
+}
+
+.button-new-tag {
+    margin-left: 10px;
+    height: 32px;
+    line-height: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.input-new-tag {
+    width: 90px;
+    margin-left: 10px;
+    vertical-align: bottom;
+}
 </style>
