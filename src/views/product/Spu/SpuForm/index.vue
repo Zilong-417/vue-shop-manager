@@ -13,9 +13,15 @@
             <el-form-item label="SPU描述">
                 <el-input type="textarea" placeholder="请输入SPU描述" rows="4" v-model="spu.description"></el-input>
             </el-form-item>
+            <!--
+                上传图片：action list-type:文件列表的类型 on-preview：图片预览的时候会触发 on-remove：删除的时候会触发
+                file-list：上传的文件列表, 例如: [{name: 'food.jpg', url: 'https://xxx.cdn.com/xxx.jpg'}]
+                on-success:文件上传成功时的钩子
+            -->
             <el-form-item label="SPU图片">
                 <el-upload action="/dev-api/admin/product/fileUpload" list-type="picture-card"
-                    :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :file-list="spuImageList">
+                    :on-preview="handlePictureCardPreview" :on-remove="handleRemove" :file-list="spuImageList"
+                    :on-success="handleSuccess">
                     <i class="el-icon-plus"></i>
                 </el-upload>
                 <el-dialog :visible.sync="dialogVisible">
@@ -23,11 +29,12 @@
                 </el-dialog>
             </el-form-item>
             <el-form-item label="销售属性">
-                <el-select :placeholder="`还有${unSelectSaleAttr.length}未选择`" v-model="attrId">
-                    <el-option :label="unSelect.name" :value="unSelect.id" v-for="(unSelect, index) in unSelectSaleAttr"
-                        :key="unSelect.id"></el-option>
+                <el-select :placeholder="`还有${unSelectSaleAttr.length}未选择`" v-model="attrIdAndAttrName">
+                    <el-option :label="unSelect.name" :value="`${unSelect.id}:${unSelect.name}`"
+                        v-for="(unSelect, index) in unSelectSaleAttr" :key="unSelect.id"></el-option>
                 </el-select>
-                <el-button type="primary" icon="el-icon-plus" style="margin-left: 5px;" :disabled="!attrId">添加销售属性
+                <el-button type="primary" icon="el-icon-plus" style="margin-left: 5px;" :disabled="!attrIdAndAttrName"
+                    @click="addSaleAttr">添加销售属性
                 </el-button>
                 <el-table style="width: 100%;margin-top: 10px;" border :data="spu.spuSaleAttrList">
                     <el-table-column label="序号" type="index" width="80px" align="center"></el-table-column>
@@ -108,16 +115,27 @@ export default {
             trademarkList: [],//品牌信息
             spuImageList: [],//存spu图片
             saleAttrList: [],//销售属性的数据
-            attrId: '',//收集未选择的销售属性ID
+            attrIdAndAttrName: '',//收集未选择的销售属性ID和销售属性
         }
     },
     methods: {
         handleRemove(file, fileList) {
-            console.log(file, fileList);
+            //file:删除的那张图片
+            //fileList：剩余的图片
+            //console.log(file, fileList);
+            //对于已有的图片【照片中显示的图片，有name，URL】，应为照片显示数据务必要有这两个属性
+            //对于服务器而言，不需要name，url，将来对于有的图片的数据在提交给服务器的时候，需要处理的
+            this.spuImageList = fileList
         },
+        //照片墙图片预览的回调
         handlePictureCardPreview(file) {
             this.dialogImageUrl = file.url;
             this.dialogVisible = true;
+        },
+        //照片墙图片上传成功的回调
+        handleSuccess(response, file, fileList) {
+            //收集图片的信息
+            this.spuImageList = fileList
         },
         //初始化SpuForm数据
         async initSpuData(spu) {
@@ -149,6 +167,16 @@ export default {
             if (saleResult.code == 200) {
                 this.saleAttrList = saleResult.data
             }
+        },
+        //添加新的销售属性
+        addSaleAttr() {
+            //已经收集需要添加的销售属性的信息
+            //把收集到的销售属性数据进行分割
+            const [baseSaleAttrId, saleAttrName] = this.attrIdAndAttrName.split(':');
+            //向SPU对象的spuSaleAttrList属性里面添加新的销售属性
+            let newSaleAttr = { baseSaleAttrId, saleAttrName, spuSaleAttrValueList: [] };
+            //添加新的销售属性
+            this.spu.spuSaleAttrList.push(newSaleAttr)
         }
     },
     computed: {
