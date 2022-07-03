@@ -42,30 +42,31 @@
                     <el-table-column label="属性值名称列表" prop="prop" width="width">
                         <!--作用域插槽  row销售属性-->
                         <template slot-scope="{row,$index}">
-                            <el-tag :key="tag.id" v-for="tag in row.spuSaleAttrValueList" closable
-                                :disable-transitions="false">
+                            <el-tag :key="tag.id" v-for="(tag, index) in row.spuSaleAttrValueList" closable
+                                :disable-transitions="false" @close="row.spuSaleAttrValueList.splice(index, 1)">
                                 {{ tag.saleAttrValueName }}
                             </el-tag>
 
                             <!-- @keyup.enter.native="handleInputConfirm" @blur="handleInputConfirm"-->
                             <el-input class="input-new-tag" v-if="row.inputVisible" v-model="row.inputValue"
-                                ref="saveTagInput" size="small">
+                                ref="saveTagInput" size="small" @blur="handleInputConfirm(row)">
                             </el-input>
                             <!--@click="showInput"-->
-                            <el-button v-else class="button-new-tag" size="small">+ 添加
+                            <el-button v-else class="button-new-tag" size="small" @click="addSaleAttrValue(row)">+ 添加
                             </el-button>
                         </template>
                     </el-table-column>
                     <el-table-column label="操作" prop="prop" width="200">
                         <template slot-scope="{row,$index}">
-                            <el-button type="danger" icon="el-icon-delete">删除</el-button>
+                            <el-button type="danger" icon="el-icon-delete"
+                                @click="spu.spuSaleAttrList.splice($index, 1)">删除</el-button>
 
                         </template>
                     </el-table-column>
                 </el-table>
             </el-form-item>
             <el-form-item>
-                <el-button type="primary">保存</el-button>
+                <el-button type="primary" @click="addOrUptateSpu">保存</el-button>
                 <el-button @click="$emit('changeScence', 0)">取消</el-button>
             </el-form-item>
         </el-form>
@@ -82,7 +83,7 @@ export default {
             //spu初始化为一个空对象
             spu: {
                 "category3Id": 0,
-                "description": "string",
+                "description": "",
                 "spuImageList": [
                     // {
                     //     "id": 0,
@@ -91,8 +92,8 @@ export default {
                     //     "spuId": 0
                     // }
                 ],
-                "spuName": "string",
-                "tmId": 0,
+                "spuName": "",
+                "tmId": "",
                 "spuSaleAttrList": [
                     // {
                     //     "baseSaleAttrId": 0,
@@ -177,6 +178,62 @@ export default {
             let newSaleAttr = { baseSaleAttrId, saleAttrName, spuSaleAttrValueList: [] };
             //添加新的销售属性
             this.spu.spuSaleAttrList.push(newSaleAttr)
+            this.attrIdAndAttrName = ''
+        },
+        //添加属性值按钮的回调
+        addSaleAttrValue(row) {
+            //挂载在销售属性身上的响应数据inputVisible，控制button与input的切换
+            this.$set(row, 'inputVisible', true)
+            //属性值
+            this.$set(row, 'inputValue', '')
+        },
+        //添加属性值失去焦点事件
+        handleInputConfirm(row) {
+            //结构出销售属性当中收集数据
+            const { baseSaleAttrId, inputValue } = row;
+            if (inputValue.trim() == '') {
+                this.$message('属性值不能为空')
+                return
+            }
+            let result = row.spuSaleAttrValueList.some(item => item.saleAttrValueName == inputValue);
+            if (result) {
+                this.$message('属性值不能重复')
+                return
+            }
+            //新增的销售属性
+            let newSaleAttrValue = { baseSaleAttrId, saleAttrValueName: inputValue }
+            row.spuSaleAttrValueList.push(newSaleAttrValue)
+            row.inputVisible = false
+        },
+        //保存按钮回调
+        async addOrUptateSpu() {
+            this.spu.spuImageList = this.spuImageList.map((item) => {
+                return {
+                    imgName: item.name,
+                    imgUrl: (item.response && item.response.data) || item.url
+                }
+            })
+            //发请求
+            let result = await this.$API.spu.reqAddOrUodateSpu(this.spu)
+            // console.log(result)
+            if (result.code == 200) {
+                this.$message({ type: 'success', message: '保存成功' })
+                this.$emit('changeScence', 0)
+            }
+        },
+        //点击添加按钮的时候，发请求
+        async addSpuData() {
+            //获取spu信息的数据
+            let SpuResult = await this.$API.spu.reqSpu(spu.id)
+            console.log(SpuResult)
+            if (SpuResult.code == 200) {
+                this.spu = SpuResult.data
+            }
+            //获取平台全部的销售属性
+            let saleResult = await this.$API.spu.reqSaleAttrList()
+            if (saleResult.code == 200) {
+                this.saleAttrList = saleResult.data
+            }
         }
     },
     computed: {

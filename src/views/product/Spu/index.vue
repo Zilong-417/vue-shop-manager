@@ -2,7 +2,7 @@
     <div>
         <el-card style="margin: 20px 0;">
             <!--三级联动已经是全局组件了-->
-            <CategorySelect @getCategoryId="getCategoryId" :show="!show"></CategorySelect>
+            <CategorySelect @getCategoryId="getCategoryId" :show="scence != 0"></CategorySelect>
         </el-card>
         <el-card>
             <div v-show="scence == 0">
@@ -106,6 +106,8 @@ export default {
         //添加SPU按钮的回调
         addSpu() {
             this.scence = 1
+            //通知子组件spuForm发请求
+            this.$ref.spu.addSpuData();
         },
         //修改Spu按钮的回调
         updateSpu(row) {
@@ -118,6 +120,7 @@ export default {
         //自定义事件回调（SpuForm）
         changeScence(scence) {
             this.scence = scence
+            this.getSpuList(this.page)
         }
     },
     components: {
