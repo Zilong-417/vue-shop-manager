@@ -24,7 +24,10 @@
                                 @click="updateSpu(row)"></hint-button>
                             <hint-button type="info" icon="el-icon-info" size="mini" title="查看当前Spu全部Sku列表">
                             </hint-button>
-                            <hint-button type="danger" icon="el-icon-delete" size="mini" title="删除Spu"></hint-button>
+                            <el-popconfirm title="确定删除吗？" @onConfirm="deleteSpu(row)">
+                                <hint-button type="danger" icon="el-icon-delete" size="mini" title="删除Spu"
+                                    slot="reference"></hint-button>
+                            </el-popconfirm>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -107,7 +110,7 @@ export default {
         addSpu() {
             this.scence = 1
             //通知子组件spuForm发请求
-            this.$ref.spu.addSpuData();
+            this.$refs.spu.addSpuData(this.category3Id);
         },
         //修改Spu按钮的回调
         updateSpu(row) {
@@ -118,9 +121,22 @@ export default {
                 this.$refs.spu.initSpuData(row)
         },
         //自定义事件回调（SpuForm）
-        changeScence(scence) {
+        changeScence({ scence, flag }) {
             this.scence = scence
-            this.getSpuList(this.page)
+            if (flag == '修改') {
+                this.getSpuList(this.page)
+            } else {
+                this.getSpuList()
+            }
+        },
+        //删除SPu
+        async deleteSpu(row) {
+            let result = await this.$API.spu.reqdeleteSpu(row.id)
+            console.log(result)
+            if (result.code == 200) {
+                this.$message({ type: 'success', message: '删除成功' })
+            }
+            this.getSpuList(this.records.length > 1 ? this.page : this.page - 1)
         }
     },
     components: {

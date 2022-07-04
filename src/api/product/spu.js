@@ -32,13 +32,18 @@ export const reqSaleAttrList = () => request({
 })
 
 //修改SPU||删除SPU 依据服务器是否携带id进行区分
-export const reqAddOrUodateSpu = (spuInfo) => {
+export const reqAddOrUpdateSpu = (spuInfo) => {
     //修改spu
     if (spuInfo.id) {
-        return request({ url: `/admin/product/saveSpuInfo`, method: 'post', data: spuInfo })
-    }
-    //删除spu
-    else {
         return request({ url: `/admin/product/updateSpuInfo`, method: 'post', data: spuInfo })
     }
+    //添加spu
+    else {
+        return request({ url: `/admin/product/saveSpuInfo`, method: 'post', data: spuInfo })
+    }
 }
+
+//删除SPU
+export const reqdeleteSpu = (spuId) => request({
+    url: `/admin/product/deleteSpu/${spuId}`, method: 'delete'
+})

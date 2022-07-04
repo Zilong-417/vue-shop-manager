@@ -67,7 +67,7 @@
             </el-form-item>
             <el-form-item>
                 <el-button type="primary" @click="addOrUptateSpu">保存</el-button>
-                <el-button @click="$emit('changeScence', 0)">取消</el-button>
+                <el-button @click="cancle">取消</el-button>
             </el-form-item>
         </el-form>
     </div>
@@ -214,26 +214,37 @@ export default {
                 }
             })
             //发请求
-            let result = await this.$API.spu.reqAddOrUodateSpu(this.spu)
-            // console.log(result)
+            let result = await this.$API.spu.reqAddOrUpdateSpu(this.spu)
+            console.log(result)
             if (result.code == 200) {
                 this.$message({ type: 'success', message: '保存成功' })
-                this.$emit('changeScence', 0)
+                //通知父组件回到场景0
+                this.$emit('changeScence', { scence: 0, flag: this.spu.id ? '修改' : '添加' })
             }
+            Object.assign(this._data, this.$options.data());
         },
         //点击添加按钮的时候，发请求
-        async addSpuData() {
-            //获取spu信息的数据
-            let SpuResult = await this.$API.spu.reqSpu(spu.id)
-            console.log(SpuResult)
-            if (SpuResult.code == 200) {
-                this.spu = SpuResult.data
+        async addSpuData(category3Id) {
+            //手机三级分类ID
+            this.spu.category3Id = category3Id
+            //获取品牌信息
+            let trademarkResult = await this.$API.spu.reqTrademarkList();
+            if (trademarkResult.code == 200) {
+                this.trademarkList = trademarkResult.data
             }
             //获取平台全部的销售属性
             let saleResult = await this.$API.spu.reqSaleAttrList()
             if (saleResult.code == 200) {
                 this.saleAttrList = saleResult.data
             }
+        },
+        //取消
+        cancle() {
+            this.$emit('changeScence', { scence: 0, flag: '' })
+            //Object.assign:合并对象
+            //组件实例this._data,可以操作data当中的响应式数据
+            //this.$options可以获配置对象，配置对象的data函数执行，返回的响应式数据为空
+            Object.assign(this._data, this.$options.data());
         }
     },
     computed: {
