@@ -3,9 +3,10 @@
     <div class="dashboard-text">name: {{ name }}</div>
     <Card></Card>
   </div> -->
-  <div>
+  <div class="dashboard-container">
     <Card></Card>
     <Sale></Sale>
+    <Observe></Observe>
   </div>
 </template>
 
@@ -13,6 +14,7 @@
 // import { mapGetters } from 'vuex'
 import Card from './Card'
 import Sale from './Sale'
+import Observe from './Observe'
 
 export default {
   name: 'Dashboard',
@@ -21,7 +23,7 @@ export default {
   //     'name'
   //   ])
   // },
-  components: { Card, Sale }
+  components: { Card, Sale, Observe }
 }
 </script>
 
