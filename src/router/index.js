@@ -25,18 +25,14 @@ import Layout from '@/layout'
   }
  */
 
-/**
- * constantRoutes
- * a base page that does not have permission requirements
- * all roles can be accessed
- */
 export const constantRoutes = [
+  //登录
   {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
-
+  //404页面
   {
     path: '/404',
     component: () => import('@/views/404'),
@@ -77,13 +73,13 @@ export const constantRoutes = [
         path: '/Spu',
         name: 'Spu',
         component: () => import('@/views/product/Spu'),
-        meta: { title: 'Spu' }
+        meta: { title: 'Spu管理' }
       },
       {
         path: '/Sku',
         name: 'Sku',
         component: () => import('@/views/product/Sku'),
-        meta: { title: 'Sku' }
+        meta: { title: 'Sku管理' }
       },
     ]
   },
@@ -99,7 +95,6 @@ const createRouter = () => new Router({
 
 const router = createRouter()
 
-// Detail see: https://github.com/vuejs/vue-router/issues/1234#issuecomment-357941465
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router
