@@ -62,12 +62,12 @@ export default {
         password: "111111",
       },
       loginRules: {
-        username: [
-          { required: true, trigger: "blur", validator: validateUsername },
-        ],
-        password: [
-          { required: true, trigger: "blur", validator: validatePassword },
-        ],
+        // username: [
+        //   { required: true, trigger: "blur", validator: validateUsername },
+        // ],
+        // password: [
+        //   { required: true, trigger: "blur", validator: validatePassword },
+        // ],
       },
       loading: false,
       passwordType: "password",

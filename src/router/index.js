@@ -32,64 +32,33 @@ import Layout from '@/layout'
 //常量路由:就是不关用户是什么角色，都可以看见的路由
 //什么角色（超级管理员，普通员工）：登录、404、首页
 export const constantRoutes = [
-  //登录
   {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
-  //404页面
+
   {
     path: '/404',
     component: () => import('@/views/404'),
     hidden: true
   },
-  //首页
+
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',//重定向到dashboard
+    redirect: '/dashboard',
     children: [{
       path: 'dashboard',
       name: 'Dashboard',
-      component: () => import('@/views/dashboard/index'),//路由懒加载
+      component: () => import('@/views/dashboard/index'),
       meta: { title: '首页', icon: 'dashboard' }
     }]
   },
-  //商品管理
-  {
-    path: '/product',
-    component: Layout,
-    name: 'Product',
-    meta: { title: '商品管理', icon: 'el-icon-goods' },
-    children: [
-      {
-        path: '/tradeMark',
-        name: 'tradeMark',
-        component: () => import('@/views/product/tradeMark'),
-        meta: { title: '品牌管理' }
-      },
-      {
-        path: '/Attr',
-        name: 'Attr',
-        component: () => import('@/views/product/Attr'),
-        meta: { title: '平台属性管理' }
-      },
-      {
-        path: '/Spu',
-        name: 'Spu',
-        component: () => import('@/views/product/Spu'),
-        meta: { title: 'Spu管理' }
-      },
-      {
-        path: '/Sku',
-        name: 'Sku',
-        component: () => import('@/views/product/Sku'),
-        meta: { title: 'Sku管理' }
-      },
-    ]
-  },
-  //权限管理
+]
+//异步理由:不同的用户（角色），需要过滤筛选出的路由，称之为异步路由
+//有的用户可以看见测试管理、有的看不见
+export const asyncRoutes = [
   {
     name: 'Acl',
     path: '/acl',
@@ -136,13 +105,48 @@ export const constantRoutes = [
       },
     ]
   },
-  // 404 page must be placed at the end !!!
-  { path: '*', redirect: '/404', hidden: true }
+  {
+    path: '/product',
+    component: Layout,
+    name: 'Product',
+    meta: { title: '商品管理', icon: 'el-icon-goods' },
+    children: [
+      {
+        path: 'trademark',
+        name: 'TradeMark',
+        component: () => import('@/views/product/tradeMark'),
+        meta: { title: '品牌管理' }
+      },
+      {
+        path: 'attr',
+        name: 'Attr',
+        component: () => import('@/views/product/Attr'),
+        meta: { title: '平台属性管理' }
+      },
+      {
+        path: 'spu',
+        name: 'Spu',
+        component: () => import('@/views/product/Spu'),
+        meta: { title: 'Spu管理' }
+      },
+      {
+        path: 'sku',
+        name: 'Sku',
+        component: () => import('@/views/product/Sku'),
+        meta: { title: 'Sku管理' }
+      },
+    ]
+  }
 ]
+
+//任意路由：当路径出现错误的时候重定向404
+export const anyRoutes = { path: '*', redirect: '/404', hidden: true };
+
 
 const createRouter = () => new Router({
   // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
+  //因为注册的路由是‘死的’，‘活的’路由如果根据不同用户（角色）可以展示不同菜单
   routes: constantRoutes
 })
 
