@@ -12,9 +12,7 @@
                 </div>
             </div>
             <div>
-                <div class="charts" ref="charts">
-
-                </div>
+                <div class="charts" ref="charts"></div>
             </div>
         </el-card>
     </div>
@@ -88,11 +86,19 @@ export default {
     }
 }
 </script>
-
 <style scoped>
 .category-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
+}
+
+.header {
+    border-bottom: 1px solid #eee;
+}
+
+.charts {
+    width: 100%;
+    height: 300px;
 }
 </style>

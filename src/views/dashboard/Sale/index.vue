@@ -167,7 +167,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .clearfix {
     position: relative;
     display: flex;

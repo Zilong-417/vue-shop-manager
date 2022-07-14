@@ -291,13 +291,14 @@ export default {
     async getUsers(page = 1) {
       this.page = page
       const { limit, searchObj } = this
+      //console.log(this)
       this.listLoading = true
       const result = await this.$API.user.getPageList(page, limit, searchObj)
       this.listLoading = false
       const { items, total } = result.data
       this.users = items.filter(item => item.username !== 'admin')
-      this.total = total - 1
-      this.selectedIds = []
+      this.total = total - 1//总数量
+      this.selectedIds = []//所有选择用户id组合的数组
     },
 
     /* 

@@ -21,7 +21,7 @@ const getDefaultState = () => {
     roles: [],
     //按钮权限的信息
     buttons: [],
-    //对比之后【项目中已有的异步路由，与服务器返回的标记信息进行对比最终需要展示的理由】
+    //对比之后【项目中已有的异步路由，与服务器返回的标记信息进行对比最终需要展示的路由】
     resultAsyncRoutes: [],
     //用户最终需要展示全部路由
     resultAllRputes: []
@@ -101,6 +101,7 @@ const actions = {
   getInfo({ commit, state }) {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
+        console.log(response)
         //获取用户信息:返回数据包含：用户名name、用户头像avatar、routes[返回的标志:不同的用户应该展示哪些菜单的标记]、
         //roles（用户角色信息）、buttons【按钮的信息：按钮权限用的标记】
         const { data } = response;
