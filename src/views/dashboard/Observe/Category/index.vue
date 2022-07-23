@@ -35,8 +35,8 @@ export default {
         //配置数据
         lineCharts.setOption({
             title: {
-                text: 'Engine',
-                subtext: 1048,
+                text: '酒类',
+                subtext: '10%',
                 left: 'center',
                 top: 'center'
             },
@@ -45,7 +45,7 @@ export default {
             },
             series: [
                 {
-                    name: 'Access From',
+                    name: '销售额',
                     type: 'pie',
                     radius: ['40%', '70%'],
                     avoidLabelOverlap: false,
@@ -63,11 +63,11 @@ export default {
                         show: true
                     },
                     data: [
-                        { value: 1048, name: 'Search Engine' },
-                        { value: 735, name: 'Direct' },
-                        { value: 580, name: 'Email' },
-                        { value: 484, name: 'Union Ads' },
-                        { value: 300, name: 'Video Ads' }
+                        { value: 1048, name: '酒类' },
+                        { value: 735, name: '粮油调料' },
+                        { value: 580, name: '冷冻品' },
+                        { value: 484, name: '方便食品' },
+                        { value: 300, name: '其他' }
                     ]
                 }
             ]
@@ -99,6 +99,6 @@ export default {
 
 .charts {
     width: 100%;
-    height: 300px;
+    height: 393px;
 }
 </style>

@@ -27,7 +27,7 @@ export default {
             series: [
                 {
                     type: 'bar',
-                    data: [10, 47, 33, 12, 44, 9, 10, 47, 33, 12, 44, 9],
+                    data: [10, 37, 36, 19, 44, 9, 10, 47, 33, 12, 44, 9],
                     color: 'yellowgreen'
                 }
             ],

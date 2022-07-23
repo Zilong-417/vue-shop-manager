@@ -74,6 +74,7 @@ export function getById(id) {
 export function add(user) {
   return request({
     url: `${api_name}/save`,
+    //url: `${user}/save`,
     method: 'post',
     data: user
   })
@@ -121,6 +122,7 @@ export function assignRoles(userId, roleId) {
 export function removeById(id) {
   return request({
     url: `${api_name}/remove/${id}`,
+    //url: `/admin/acl/user/remove/${id}`,
     method: 'delete'
   })
 }

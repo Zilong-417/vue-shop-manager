@@ -53,9 +53,9 @@ const mutations = {
     //角色
     state.roles = userInfo.roles;
   },
-  //最终计算出的异步路由
+  //最终计算出的过滤路由
   SET_RESULTASYNCROUTES: (state, asyncRoutes) => {
-    //vuex保存当前用户的异步路由，注意，一个用户需要展示完成路由：常量、异步、任意路由
+    //vuex保存当前用户的过滤路由
     state.resultAsyncRoutes = asyncRoutes;
     //计算出当前用户需要展示所有路由
     state.resultAllRputes = constantRoutes.concat(state.resultAsyncRoutes, anyRoutes);
@@ -63,13 +63,11 @@ const mutations = {
     router.addRoutes(state.resultAllRputes)
   }
 }
-//定义一个函数：两个数组进行对比，对比出当前用户到底显示哪些异步路由
+//asyncRoutes当前用户显示路由，routes系统路由
 const computedAsyncRoutes = (asyncRoutes, routes) => {
-  //过滤出当前用户【超级管理|普通员工】需要展示的异步路由
+  //过滤出当前用户【超级管理|普通员工】需要展示的过滤路由
   return asyncRoutes.filter(item => {
-    //数组当中没有这个元素返回索引值-1，如果有这个元素返回的索引值一定不是-1 
     if (routes.indexOf(item.name) != -1) {
-      //递归:别忘记还有2、3、4、5、6级路由
       if (item.children && item.children.length) {
         item.children = computedAsyncRoutes(item.children, routes);
       }
@@ -102,7 +100,8 @@ const actions = {
     return new Promise((resolve, reject) => {
       getInfo(state.token).then(response => {
         console.log(response)
-        //获取用户信息:返回数据包含：用户名name、用户头像avatar、routes[返回的标志:不同的用户应该展示哪些菜单的标记]、
+        //获取用户信息:返回数据包含：用户名name、用户头像avatar、routes
+        //[返回的标志:不同的用户应该展示哪些菜单的标记]、
         //roles（用户角色信息）、buttons【按钮的信息：按钮权限用的标记】
         const { data } = response;
         //vuex存储用户全部的信息

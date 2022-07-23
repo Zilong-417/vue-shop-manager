@@ -25,12 +25,8 @@ import Layout from '@/layout'
   }
  */
 
-//路由的配置：为什么不同用户登录我们的项目，菜单（路由）都是一样的？
-//因为咱们的路由‘死的’，不管你是谁，你能看见的，操作的菜单都是一样的
-//需要把项目中的路由进行拆分
 
-//常量路由:就是不关用户是什么角色，都可以看见的路由
-//什么角色（超级管理员，普通员工）：登录、404、首页
+//默认路由
 export const constantRoutes = [
   {
     path: '/login',
@@ -56,8 +52,7 @@ export const constantRoutes = [
     }]
   },
 ]
-//异步理由:不同的用户（角色），需要过滤筛选出的路由，称之为异步路由
-//有的用户可以看见测试管理、有的看不见
+//不同的用户（角色），需要过滤筛选出的路由
 export const asyncRoutes = [
   {
     name: 'Acl',
@@ -151,7 +146,7 @@ const createRouter = () => new Router({
 })
 
 const router = createRouter()
-
+//重置路由
 export function resetRouter() {
   const newRouter = createRouter()
   router.matcher = newRouter.matcher // reset router

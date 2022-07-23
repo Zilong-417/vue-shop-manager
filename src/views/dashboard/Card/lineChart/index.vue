@@ -28,14 +28,14 @@ export default {
                 {
                     type: 'line',
                     smooth: true,
-                    data: [10, 47, 33, 12, 44, 9],
+                    data: [10, 47, 33, 82, 44, 9],
                     //拐点的样式
                     itemStyle: {
                         opacity: 0
                     },
                     //线条的样式
                     lineStyle: {
-                        color: "purple"
+                        color: "#DDAA00"
                     },
                     //填充颜色
                     areaStyle: {
@@ -48,7 +48,7 @@ export default {
                             colorStops: [
                                 {
                                     offset: 0,
-                                    color: "purple"
+                                    color: "	#DDAA00"
                                 },
                                 {
                                     offset: 1,

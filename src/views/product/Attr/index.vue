@@ -26,7 +26,8 @@
                         <template slot-scope="{row,$index}">
                             <el-button type="warning" icon="el-icon-edit" size="mini" @click="updateAttr(row)">
                             </el-button>
-                            <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
+                            <el-button type="danger" icon="el-icon-delete" size="mini" @click="deleteAttr(row)">
+                            </el-button>
                         </template>
                     </el-table-column>
                 </el-table>
@@ -206,7 +207,6 @@ export default {
             //row.flag = true
         },
         //气泡删除确认框的确定事件
-        //最新版本的ElementUI--2.15.6 要用onConfirm
         deleteValueName(index) {
             //当前删除属性值的操作是不需要发请求的
             this.attrInfo.attrValueList.splice(index, 1)
@@ -234,6 +234,15 @@ export default {
             } catch (error) {
 
             }
+        },
+        //删除属性值
+        async deleteAttr(row) {
+            let result = await this.$API.attr.deleteAttr(row.id)
+            console.log(result)
+            if (result.code == 200) {
+                this.$message({ type: 'success', message: '删除成功' })
+            }
+            this.getAttrList()
         }
     }
 }

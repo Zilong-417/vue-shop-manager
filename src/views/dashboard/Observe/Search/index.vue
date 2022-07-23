@@ -9,11 +9,10 @@
                             <i class="el-icon-more"></i>
                         </span>
                         <el-dropdown-menu slot="dropdown" style="width: 100px;">
-                            <el-dropdown-item>黄金糕</el-dropdown-item>
-                            <el-dropdown-item>狮子头</el-dropdown-item>
-                            <el-dropdown-item>螺蛳粉</el-dropdown-item>
-                            <el-dropdown-item>双皮奶</el-dropdown-item>
-                            <el-dropdown-item divided>蚵仔煎</el-dropdown-item>
+                            <el-dropdown-item>本日</el-dropdown-item>
+                            <el-dropdown-item>本周</el-dropdown-item>
+                            <el-dropdown-item>本月</el-dropdown-item>
+                            <el-dropdown-item divided>本年</el-dropdown-item>
                         </el-dropdown-menu>
                     </el-dropdown>
                 </div>
@@ -32,10 +31,19 @@
                     <el-table-column label="排名" width="80" type="index">
                     </el-table-column>
                     <el-table-column label="搜索关键字">
+                        <template slot-scope="{row,$index}">
+                            {{ row.name }}
+                        </template>
                     </el-table-column>
                     <el-table-column label="用户数" sortable>
+                        <template slot-scope="{row,$index}">
+                            {{ row.num }}
+                        </template>
                     </el-table-column>
                     <el-table-column label="周涨幅" sortable>
+                        <template slot-scope="{row,$index}">
+                            {{ row.up }}
+                        </template>
                     </el-table-column>
                 </el-table>
                 <el-pagination background layout="prev, pager, next" :total="1000"
@@ -52,7 +60,24 @@ export default {
     name: '',
     data() {
         return {
-            tableData: [{}]
+            tableData: [{
+                id: 0,
+                name: '唱',
+                num: 123,
+                up: '10%'
+            },
+            {
+                id: 1,
+                name: '跳',
+                num: 456,
+                up: '11%'
+            },
+            {
+                id: 2,
+                name: 'rap',
+                num: 789,
+                up: '12%'
+            }],
         }
     },
     components: {

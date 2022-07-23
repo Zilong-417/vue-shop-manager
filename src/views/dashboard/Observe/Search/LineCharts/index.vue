@@ -6,7 +6,7 @@
         </div>
         <div class="main">
             <span class="main-title">12345</span>
-            <span class="main-content">12.2</span>
+            <span class="main-content">99.9</span>
             <i class="el-icon-caret-top" style="color: greenyellow"></i>
             <i class="el-icon-caret-bottom" style="color: red"></i>
         </div>
@@ -39,7 +39,7 @@ export default {
                 {
                     type: 'line',
                     smooth: true,
-                    data: [10, 47, 33, 12, 44, 9],
+                    data: [10, 47, 33, 92, 44, 9],
                     //拐点的样式
                     itemStyle: {
                         opacity: 0

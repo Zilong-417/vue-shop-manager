@@ -13,7 +13,7 @@
                 <span @click="setYear">本年</span>
                 <!--v-model="value1"-->
                 <el-date-picker type="daterange" range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期"
-                    class="date" size="mini" v-model="date" value-format="yyyy-MM--dd">
+                    class="date" size="mini" v-model="date" value-format="yyyy--MM--dd">
                 </el-date-picker>
             </div>
         </div>
@@ -26,40 +26,10 @@
                 <el-col :span="8" class="right">
                     <h3>门店{{ title }}排名</h3>
                     <ul>
-                        <li>
-                            <span class="rindex">0</span>
-                            <span>茶百道</span>
-                            <span class="rvalue">123456</span>
-                        </li>
-                        <li>
-                            <span class="rindex">1</span>
-                            <span>茶百道</span>
-                            <span class="rvalue">123456</span>
-                        </li>
-                        <li>
-                            <span class="rindex">2</span>
-                            <span>茶百道</span>
-                            <span class="rvalue">123456</span>
-                        </li>
-                        <li>
-                            <span class="rindex">3</span>
-                            <span>茶百道</span>
-                            <span class="rvalue">123456</span>
-                        </li>
-                        <li>
-                            <span class="rindex2">4</span>
-                            <span>茶百道</span>
-                            <span class="rvalue">123456</span>
-                        </li>
-                        <li>
-                            <span class="rindex2">5</span>
-                            <span>茶百道</span>
-                            <span class="rvalue">123456</span>
-                        </li>
-                        <li>
-                            <span class="rindex2">6</span>
-                            <span>茶百道</span>
-                            <span class="rvalue">123456</span>
+                        <li v-for="(item, index) in listsData" :key="index">
+                            <span class="rindex">{{ item.id }}</span>
+                            <span>{{ item.name }}</span>
+                            <span class="rvalue">{{ item.value }}</span>
                         </li>
                     </ul>
                 </el-col>
@@ -79,7 +49,33 @@ export default {
             activeName: 'first',
             mycharts: null,
             //日历事件
-            date: []
+            date: [],
+            listsData: [{
+                id: 0,
+                name: '茶百道',
+                value: 12345
+            },
+            {
+                id: 2,
+                name: '茶百道',
+                value: 12345
+            }, {
+                id: 3,
+                name: '茶百道',
+                value: 12345
+            }, {
+                id: 4,
+                name: '茶百道',
+                value: 12345
+            }, {
+                id: 5,
+                name: '茶百道',
+                value: 12345
+            }, {
+                id: 6,
+                name: '茶百道',
+                value: 12345
+            }]
         }
     },
     mounted() {
@@ -129,40 +125,125 @@ export default {
     },
     computed: {
         title() {
-            return this.activeName == 'first' ? '销售额' : '访问量'
+
+            if (this.activeName == 'first') {
+                return '销售额'
+            } else {
+                return '访问量'
+            }
         }
     },
     watch: {
         title() {
             //重新修改图标的配置数据
-            //图标配置数据可以再次修改，遇到新的则该
-            this.mycharts.setOption({
-                title: {
-                    text: this.title
-                }
-            })
+            //图标配置数据可以再次修改，遇到新的则改
+            if (this.activeName == 'first') {
+                this.mycharts.setOption({
+                    title: {
+                        text: this.title
+                    },
+
+                    series: [
+                        {
+                            name: 'Direct',
+                            type: 'bar',
+                            barWidth: '60%',
+                            data: [10, 52, 200, 334, 390, 330, 220, 10, 52, 200, 334, 390],
+                            color: 'skyblue'
+                        }
+                    ]
+                })
+                this.listsData = [{
+                    id: 0,
+                    name: '茶百道',
+                    value: 12345
+                },
+                {
+                    id: 2,
+                    name: '茶百道',
+                    value: 12345
+                }, {
+                    id: 3,
+                    name: '茶百道',
+                    value: 12345
+                }, {
+                    id: 4,
+                    name: '茶百道',
+                    value: 12345
+                }, {
+                    id: 5,
+                    name: '茶百道',
+                    value: 12345
+                }, {
+                    id: 6,
+                    name: '茶百道',
+                    value: 12345
+                }]
+            } else {
+                this.mycharts.setOption({
+                    title: {
+                        text: this.title
+                    },
+                    series: [
+                        {
+                            name: 'Direct',
+                            type: 'bar',
+                            barWidth: '60%',
+                            data: [10, 152, 300, 330, 340, 130, 320, 100, 152, 200, 334, 390],
+                            color: '#00AA00'
+                        }
+                    ]
+                })
+                this.listsData = [{
+                    id: 0,
+                    name: '一点点',
+                    value: 67890
+                },
+                {
+                    id: 2,
+                    name: '一点点',
+                    value: 67890
+                }, {
+                    id: 3,
+                    name: '一点点',
+                    value: 67890
+                }, {
+                    id: 4,
+                    name: '一点点',
+                    value: 67890
+                }, {
+                    id: 5,
+                    name: '一点点',
+                    value: 67890
+                }, {
+                    id: 6,
+                    name: '一点点',
+                    value: 67890
+                }]
+            }
         }
     },
     methods: {
         setDay() {
-            const day = dayjs().format('YYYY-MM--DD')
+            const day = dayjs().format('YYYY--MM--DD')
             this.date = [day, day]
         },
         setWeek() {
-            const start = dayjs().day(1).format('YYYY-MM--DD')
-            const end = dayjs().day(7).format('YYYY-MM--DD')
+            const start = dayjs().day(1).format('YYYY--MM--DD')
+            const end = dayjs().day(7).format('YYYY--MM--DD')
             this.date = [start, end]
         },
         setMonth() {
-            const start = dayjs().startOf('month').format('YYYY-MM--DD')
-            const end = dayjs().endOf('month').format('YYYY-MM--DD')
+            const start = dayjs().startOf('month').format('YYYY--MM--DD')
+            const end = dayjs().endOf('month').format('YYYY--MM--DD')
             this.date = [start, end]
         },
         setYear() {
-            const start = dayjs().startOf('year').format('YYYY-MM--DD')
-            const end = dayjs().endOf('year').format('YYYY-MM--DD')
+            const start = dayjs().startOf('year').format('YYYY--MM--DD')
+            const end = dayjs().endOf('year').format('YYYY--MM--DD')
             this.date = [start, end]
         }
+
     }
 }
 </script>
